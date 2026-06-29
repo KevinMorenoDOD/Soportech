@@ -1,0 +1,26 @@
+# ===============================================================
+# SoporteTech - Backend Configuration Template
+# ===============================================================
+# Copy this to application.properties and fill in the values.
+# These can also be set via environment variables.
+# ===============================================================
+
+spring.application.name=autoticket-gestor-bk
+
+# ─── Database (Supabase / PostgreSQL) ─────────────────────────
+spring.datasource.url=${DB_URL}
+spring.datasource.username=${DB_USERNAME}
+spring.datasource.password=${DB_PASSWORD}
+spring.datasource.driver-class-name=org.postgresql.Driver
+
+spring.jpa.open-in-view=false
+spring.jpa.hibernate.ddl-auto=validate
+spring.jpa.show-sql=true
+
+# ─── n8n Webhook ──────────────────────────────────────────────
+n8n.webhook.status-url=${N8N_WEBHOOK_URL}
+n8n.api.token=${N8N_API_TOKEN}
+
+# ─── JWT Authentication ───────────────────────────────────────
+jwt.secret=${JWT_SECRET}
+jwt.expiration=86400000

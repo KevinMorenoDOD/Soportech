@@ -1,0 +1,48 @@
+{
+  "name": "StatusUpdaterApi",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "/webhook-test/status_update",
+        "responseMode": "lastNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [-240, 300],
+      "id": "WEBHOOK_ID",
+      "name": "Webhook",
+      "webhookId": "WEBHOOK_ID"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://gate.whapi.cloud/messages/text",
+        "authentication": "genericCredentialType",
+        "nodeCredentialType": "whapiCloudApi",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            { "name": "typing_time", "value": 0 },
+            { "name": "preview_url", "value": false, "parameterType": "boolean" }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [80, 300],
+      "id": "WHAPI_ID",
+      "name": "Whapi"
+    }
+  ],
+  "connections": {
+    "Webhook": { "main": [[ { "node": "Whapi", "type": "main", "index": 0 } ]] }
+  },
+  "active": false,
+  "settings": {},
+  "staticData": null,
+  "tags": [],
+  "id": "WORKFLOW_ID"
+}

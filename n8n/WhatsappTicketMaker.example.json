@@ -1,0 +1,119 @@
+{
+  "name": "WhatsappTicketMaker",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "/whatsapp-direct-message",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [-176, 320],
+      "id": "WEBHOOK_ID",
+      "name": "Webhook",
+      "webhookId": "WEBHOOK_ID"
+    },
+    {
+      "parameters": {
+        "jsCode": "const messageData = $input.first().json.body.messages[0]\n\nconst sender = messageData.chat_id;\nconst number = messageData.from;\nconst name = messageData.from_name || \"NULL\";\nconst message = messageData.text?.body || \"NULL\";\n\nreturn {\n  sender,\n  number,\n  name,\n  message\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [-16, 320],
+      "id": "DATA_GETTER_ID",
+      "name": "dataGetter"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.deepseek.com/chat/completions",
+        "authentication": "genericCredentialType",
+        "nodeCredentialType": "deepseekApi",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            { "name": "model", "value": "deepseek-chat" },
+            { "name": "stream", "value": false, "parameterType": "boolean" },
+            { "name": "max_tokens", "value": 1024 }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [624, 320],
+      "id": "DEEPSEEK_ID",
+      "name": "Deepseek"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://gate.whapi.cloud/messages/text",
+        "authentication": "genericCredentialType",
+        "nodeCredentialType": "whapiCloudApi",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            { "name": "typing_time", "value": 0 },
+            { "name": "preview_url", "value": false, "parameterType": "boolean" }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [944, 320],
+      "id": "WHAPI_ID",
+      "name": "Whapi"
+    },
+    {
+      "parameters": {
+        "url": "https://your-backend-host/api/webhook/whatsapp",
+        "authentication": "genericCredentialType",
+        "nodeCredentialType": "httpBearerAuth",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            { "name": "sender", "value": "={{ $json.sender }}" },
+            { "name": "message", "value": "={{ $json.message }}" },
+            { "name": "name", "value": "={{ $json.name }}" },
+            { "name": "number", "value": "={{ $json.number }}" }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1264, 320],
+      "id": "BACKEND_API_ID",
+      "name": "Backend API"
+    },
+    {
+      "parameters": {
+        "url": "https://your-backend-host/api/tickets/{{ $json.ticketCode }}",
+        "authentication": "genericCredentialType",
+        "nodeCredentialType": "httpBearerAuth",
+        "sendBody": false,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1264, 640],
+      "id": "BACKEND_TICKET_ID",
+      "name": "Backend Ticket API"
+    }
+  ],
+  "connections": {
+    "Webhook": { "main": [[ { "node": "dataGetter", "type": "main", "index": 0 } ]] },
+    "dataGetter": { "main": [[ { "node": "Deepseek", "type": "main", "index": 0 } ]] },
+    "Deepseek": { "main": [[ { "node": "Whapi", "type": "main", "index": 0 } ]] },
+    "Whapi": { "main": [[ { "node": "Backend API", "type": "main", "index": 0 } ]] }
+  },
+  "active": false,
+  "settings": {},
+  "staticData": null,
+  "tags": [],
+  "id": "WORKFLOW_ID"
+}

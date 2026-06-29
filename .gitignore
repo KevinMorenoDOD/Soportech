@@ -1,0 +1,68 @@
+# ─── Environment files ───────────────────────────────────────
+.env
+.env.local
+.env.production
+.env.development
+
+# ─── Backend: Spring Boot secrets ───────────────────────────
+autoticket-gestor-bk/src/main/resources/application.properties
+autoticket-gestor-bk/src/main/resources/application-local.properties
+autoticket-gestor-bk/src/main/resources/application-dev.properties
+autoticket-gestor-bk/src/main/resources/application-prod.properties
+
+# ─── n8n workflow files (contain API keys & tokens) ─────────
+n8n/*.json
+!n8n/*.example.json
+
+# ─── Maven build ────────────────────────────────────────────
+autoticket-gestor-bk/target/
+autoticket-gestor-bk/.mvn/wrapper/maven-wrapper.jar
+
+# ─── Node / Frontend ────────────────────────────────────────
+soportech-panel/node_modules/
+soportech-panel/dist/
+soportech-panel/dist-ssr/
+
+# ─── Graphify outputs ──────────────────────────────────────
+graphify-out/
+.graphify_python
+.graphify_root
+
+# ─── IDE / Editor ───────────────────────────────────────────
+.idea/
+.vscode/
+*.iml
+*.iws
+*.ipr
+.settings/
+.project
+.classpath
+.factorypath
+.springBeans
+.sts4-cache
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+build/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# ─── Logs ──────────────────────────────────────────────────
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# ─── OS files ───────────────────────────────────────────────
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
